@@ -5,6 +5,7 @@ import {
 	DiffWithCommandArgs,
 	DiffWithPreviousCommandArgs,
 	DiffWithWorkingCommandArgs,
+	executeActionCommand,
 	executeCommand,
 	executeEditorCommand,
 	GitActions,
@@ -29,6 +30,7 @@ import {
 	nodeSupportsClearing,
 	PageableViewNode,
 	PagerNode,
+	PullRequestNode,
 	RemoteNode,
 	RepositoryNode,
 	ResultsFileNode,
@@ -44,6 +46,7 @@ import {
 } from './nodes';
 import { debug } from '../system';
 import { runGitCommandInTerminal } from '../terminal';
+import { CreatePullRequestActionContext, OpenPullRequestActionContext } from '../api/actionRunners';
 
 interface CompareSelectedInfo {
 	ref: string;
@@ -198,6 +201,9 @@ export class ViewCommands {
 		commands.registerCommand('gitlens.views.undoCommit', this.undoCommit, this);
 
 		commands.registerCommand('gitlens.views.terminalRemoveRemote', this.terminalRemoveRemote, this);
+
+		commands.registerCommand('gitlens.views.createPullRequest', this.createPullRequest, this);
+		commands.registerCommand('gitlens.views.openPullRequest', this.openPullRequest, this);
 	}
 
 	@debug()
@@ -255,6 +261,17 @@ export class ViewCommands {
 		if (node != null && !(node instanceof ViewRefNode)) return Promise.resolve();
 
 		return GitActions.Branch.create(node?.repoPath, node?.ref);
+	}
+
+	@debug()
+	private createPullRequest(node: BranchNode | BranchTrackingStatusNode) {
+		if (!(node instanceof BranchNode) && !(node instanceof BranchTrackingStatusNode)) {
+			return Promise.resolve();
+		}
+
+		return executeActionCommand<CreatePullRequestActionContext>('createPullRequest', {
+			branch: GitReference.fromBranch(node.branch),
+		});
 	}
 
 	@debug()
@@ -351,6 +368,19 @@ export class ViewCommands {
 		if (!(node instanceof CommitNode)) return Promise.resolve();
 
 		return GitActions.push(node.repoPath, false, node.commit);
+	}
+
+	@debug()
+	private openPullRequest(node: PullRequestNode) {
+		if (!(node instanceof PullRequestNode)) return Promise.resolve();
+
+		return executeActionCommand<OpenPullRequestActionContext>('openPullRequest', {
+			pullRequest: {
+				id: node.pullRequest.id,
+				provider: node.pullRequest.provider,
+				url: node.pullRequest.url,
+			},
+		});
 	}
 
 	@debug()

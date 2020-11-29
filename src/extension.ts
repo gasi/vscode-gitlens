@@ -1,6 +1,8 @@
 'use strict';
 import * as paths from 'path';
 import { commands, ExtensionContext, extensions, window, workspace } from 'vscode';
+import { GitLensApi } from './api';
+// import { CreatePullRequestActionContext, OpenPullRequestActionContext } from './api/actionRunners';
 import { Commands, registerCommands } from './commands';
 import { configuration, Configuration } from './configuration';
 import { ContextKeys, GlobalState, GlyphChars, setContext, SyncedState } from './constants';
@@ -27,7 +29,7 @@ export async function activate(context: ExtensionContext) {
 
 			void Messages.showInsidersErrorMessage();
 
-			return;
+			return undefined;
 		}
 	}
 
@@ -105,7 +107,7 @@ export async function activate(context: ExtensionContext) {
 
 		void Messages.showGitDisabledErrorMessage();
 
-		return;
+		return undefined;
 	}
 
 	Configuration.configure(context);
@@ -127,7 +129,7 @@ export async function activate(context: ExtensionContext) {
 			);
 		}
 
-		return;
+		return undefined;
 	}
 
 	Container.initialize(extensionId, context, cfg);
@@ -151,6 +153,31 @@ export async function activate(context: ExtensionContext) {
 			GlyphChars.Dot
 		} ${Strings.getDurationMilliseconds(start)} ms`,
 	);
+
+	const api = new GitLensApi();
+
+	// api.registerActionRunner('openPullRequest', {
+	// 	label: 'Test Runner',
+	// 	run: function (context: OpenPullRequestActionContext) {
+	// 		console.log(context);
+	// 	},
+	// });
+
+	// api.registerActionRunner('createPullRequest', {
+	// 	label: 'Test Runner 1',
+	// 	run: function (context: CreatePullRequestActionContext) {
+	// 		console.log('Test Runner 1', context);
+	// 	},
+	// });
+
+	// api.registerActionRunner('createPullRequest', {
+	// 	label: 'Test Runner 2',
+	// 	run: function (context: CreatePullRequestActionContext) {
+	// 		console.log('Test Runner 2', context);
+	// 	},
+	// });
+
+	return api;
 }
 
 export function deactivate() {

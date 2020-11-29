@@ -3706,6 +3706,18 @@
 				"icon": "$(compare-changes)"
 			},
 			{
+				"command": "gitlens.views.createPullRequest",
+				"title": "Create Pull Request",
+				"category": "GitLens",
+				"icon": "$(git-pull-request)"
+			},
+			{
+				"command": "gitlens.views.openPullRequest",
+				"title": "Open Pull Request",
+				"category": "GitLens",
+				"icon": "$(git-pull-request)"
+			},
+			{
 				"command": "gitlens.views.clearNode",
 				"title": "Clear",
 				"category": "GitLens",
@@ -5100,6 +5112,14 @@
 				},
 				{
 					"command": "gitlens.views.setBranchComparisonToBranch",
+					"when": "false"
+				},
+				{
+					"command": "gitlens.views.createPullRequest",
+					"when": "false"
+				},
+				{
+					"command": "gitlens.views.openPullRequest",
 					"when": "false"
 				},
 				{
@@ -6556,6 +6576,11 @@
 					"alt": "gitlens.copyRemoteBranchUrl"
 				},
 				{
+					"command": "gitlens.views.createPullRequest",
+					"when": "gitlens:action:createPullRequest && viewItem =~ /gitlens:branch\\b(?!.*?\\b\\+(remote)\\b)/",
+					"group": "2_gitlens_quickopen@2"
+				},
+				{
 					"command": "gitlens.views.openDirectoryDiffWithWorking",
 					"when": "viewItem =~ /gitlens:(branch|tag)\\b/",
 					"group": "3_gitlens_explore@2"
@@ -6871,6 +6896,11 @@
 					"alt": "gitlens.copyRemoteFileUrlToClipboard"
 				},
 				{
+					"command": "gitlens.views.openPullRequest",
+					"when": "gitlens:action:openPullRequest && viewItem =~ /gitlens:pullrequest\\b/",
+					"group": "inline@1"
+				},
+				{
 					"command": "gitlens.openPullRequestOnRemote",
 					"when": "viewItem =~ /gitlens:pullrequest\\b/",
 					"group": "inline@99",
@@ -7073,6 +7103,11 @@
 					"group": "inline@2"
 				},
 				{
+					"command": "gitlens.views.createPullRequest",
+					"when": "gitlens:action:createPullRequest && viewItem =~ /gitlens:status:upstream:(?!none)/",
+					"group": "inline@3"
+				},
+				{
 					"command": "gitlens.openBranchOnRemote",
 					"when": "gitlens:hasRemotes && !gitlens:readonly && viewItem =~ /gitlens:status:upstream:(?!none)/",
 					"group": "inline@99",
@@ -7097,6 +7132,11 @@
 					"command": "gitlens.views.fetch",
 					"when": "gitlens:hasRemotes && !gitlens:readonly && viewItem =~ /gitlens:status:upstream:(?!none)/",
 					"group": "1_gitlens_actions@3"
+				},
+				{
+					"command": "gitlens.views.createPullRequest",
+					"when": "gitlens:action:createPullRequest && viewItem =~ /gitlens:status:upstream:(?!none)/",
+					"group": "1_gitlens_actions@4"
 				},
 				{
 					"command": "gitlens.views.dismissNode",
